@@ -74,7 +74,8 @@
   <h2>Revision History</h2>
   <h3>Since <a href="https://wg21.link/p0085r0">P0085R0</a></h3>
   <ul>
-    <li>Rebased Technical Specification onto <a href="https://wg21.link/n5001">N5001</a></li>
+    <li>Rebased Technical Specification onto <a href="https://wg21.link/n5008">N5008</a></li>
+    <li>Propose deprecation of orgiinal octal literal</li>
     <li>Removed proposed change "Technical Specification C run time library functions: strol, scanf". This has been
       handled by C in
       <a href="https://www.open-std.org/jtc1/sc22/wg14/www/docs/n3353.htm">N3353</a>.
@@ -82,6 +83,7 @@
     <li>Removed proposed change to Addendum, character literals. Octals in escape sequences have been added by
       <a href="https://wg21.link/p2290">P2290R3</a>
     </li>
+    <li>Added open question on <tt>std::format</tt> with the <tt>#</tt> option for octal literals</li>
   </ul>
 
   <a name="Proposal"></a>
@@ -159,7 +161,7 @@
   <p>
     To match <a href="https://www.open-std.org/jtc1/sc22/wg14/www/docs/n3353.htm">N3353</a>,
     make the following edits (relative to
-    <a href="https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/n5001.pdf">N5001</a>)
+    <a href="wg21.link/n5008">N5008</a>)
     with <ins>insertions</ins> and <del>removals</del> marked like so:
   </p>
 
@@ -200,7 +202,7 @@
     </i>
   </p>
   <h3><a name="31.12.8.4">31.12.8.4 Enum class <tt>perm</tt> [fs.enum.perms]</a></h3>
-  <p>Table 146 — Enum class perms [tab:fs.enum.perms]
+  <p>Table 149 — Enum class perms [tab:fs.enum.perms]
   <table border="1">
     <tr><th>Name</th><th>Value (octal)</th><th>POSIX macro</th><th>Definition or notes</th></tr>
     <tr><td><tt>none</tt></td><td><tt>0<ins>o</ins></tt></td><td></td><td>There are no permissions set for the file.</td></tr>
@@ -265,8 +267,8 @@
     <ins><i>unprefixed-octal-literal</i></ins></pre>
   <ins>is deprecated.</ins></p>
 
-  <a name="Open Questions"></a>
-  <h2>Open Questions</h2>
+  <a name="Open Question"></a>
+  <h2>Open Question: <tt>std::format</tt></h2>
   <p>In 28.5.2.2 Standard format specifiers [format.string.std], we have the following example:</p>
   <p><i>
       21 The available integer presentation types for integral types other than <tt>bool</tt> and <tt>charT</tt> are
@@ -282,91 +284,58 @@
                                                        // <i>(depending on the locale)</i></pre><i>— end example]</i>
   </p>
 
-  <p The example shows that <tt>std::format</tt> returns a consistent base prefix for the alternate form <tt>#</tt> option with a
+  <p> The example shows that <tt>std::format</tt> returns a consistent base prefix for the alternate form <tt>#</tt> option with a
     hexadecimal type -- <tt>0x</tt> for <tt>#x</tt> and <tt>0X</tt> for <tt>#X</tt>.
-    However, the same is not true for the <tt>#</tt> option with an octal type, where we have:
+    However, the same is not true for the <tt>#</tt> option with an octal type, where we would have:
   </p>
 
   <pre>
     std::string s1 = std::format("{:#o}", 042);  // <i>value of</i> s1 <i>is</i> "042"
     std::string s2 = std::format("{:#o}", 0o42); // <i>value of</i> s2 <i>is</i> "042"
+    // The option #O does not exist
   </pre>
 
   <p>To deprecate the <i>unprefixed-octal-literal</i>, we require a behaviour change in the output
-    of <tt>std::format</tt> with the <tt>#o</tt>. Instead, we propose to add
-  a new option to Table 102 with a capital <tt>O</tt>:</p>
+    of <tt>std::format</tt> with the <tt>#o</tt>. As alternatives, we propose several options:
   <p>
-    Table 102 — Meaning of type options for integer types [tab:format.type.int]
-    <table border="1">
-      <tr>
-        <th>Type</th>
-        <th align="left">Meaning</th>
-      </tr>
-      <tr>
-        <td><tt><ins>O</ins></tt></td>
-        <td><ins>
-          <tt>to_chars(first, last, value, 8);</tt> the base prefix is <tt>0o</tt> if <tt>value</tt> is nonzero and
-            is empty otherwise.
-        </ins></td>
-      </tr>
-    </table>
+  <h3>Option 1</h3>
+  <p><i>Add the <tt>#O</tt> option, returns <tt>0o</tt></i></p>
+  <li>Con: inconsistent with the convention that e.g., <tt>#X</tt> returns upper-case <tt>0X</tt></li>
+  <li>Con: can be confused with the option <tt>#0</tt></li>
+
+  <h3>Option 2</h3>
+  <p><i>Add the <tt>#o</tt> option, returns <tt>0O</tt></i></p>
+  <li>Pro: consistent with the convention that e.g., <tt>#X</tt> returns upper-case <tt>0X</tt></li>
+  <li>Con: <tt>0O</tt> is less readable than <tt>0o</tt>, so we do not want to encourage its use</li>
+
+  <h3>Option 3</h3>
+  <p><i>Add the <tt>#0o</tt> and <tt>#0O</tt> options, return <tt>0o</tt> and <tt>0o</tt> respectively</i></p>
+  <li>Pro: can format for both <tt>0o</tt> and <tt>0O</tt></li>
+  <li>Con: inconsistent with all other format specifier options for <tt>#</tt> which are only one letter</li>
+  <li>Con: can be confused with the padding option <tt>0</tt>: currently <tt>std::format("{:#05o}", 42)</tt>
+           gives <tt>00052</tt> and this option would give <tt>0o52</tt> for <tt>std::format("{:#0o}", 42)</tt>.
+  </li>
+  <p>note: also add <tt>#0b, #0B, #0x, #0X</tt> for consistency?</p>
+
+  <h3>Option 4</h3>
+  <p><i>Add the <tt>##o</tt> and <tt>##O</tt> options, return <tt>0o</tt> and <tt>0o</tt> respectively</i></p>
+  <li>Rationale: <tt>#o</tt> asks for a single character prefix and <tt>##o</tt> askss for a 2 character prefix</li>
+  <li>Pro: can format for both <tt>0o</tt> and <tt>0O</tt></li>
+  <li>Con: maybe a bit obscure</li>
+
+  <h3>Option 5</h3>
+  <p><i>Do Nothing</i></p>
+  <li>Con: <tt>std::format</tt> only outputs the depecrated octal-literal</li>
+
+  <h3>Preferred Solution</h3>
+  <p>We asked 6 experienced C++ users in the development team of the C++ data analysis framework, ROOT,
+     for feedback on which solution they would prefer.
   </p>
-
-  <p> This would give us:
-    <pre>
-      <ins>std::string s2 = std::format("{:#O}", 0o42);  // <i>value of</i> s2 <i>is</i> "0o42"</ins>
-    </pre>
-  </p>
-  <p>While it would be more consistent to return <tt>0o</tt> for <tt>#O</tt>, we do not want to recommend the usage of
-     <tt>0O</tt> over <tt>0o</tt>, because the symbols <tt>0</tt> and <tt>O</tt> are similar enough to create confusion.
-  </p>
-
-  <!-- <h3><a name="28.5.2.2">28.5.2.2 Standard format specifiers [format.string.std]</a></h3>
-  <p><i>
-      7 The <tt>#</tt> option causes the alternate form to be used for the conversion. This option is valid for
-      arithmetic types
-      other than <tt>charT</tt> and <tt>bool</tt> or when an integer presentation type is specified, and not otherwise.
-      For integral
-      types, the alternate form inserts the base prefix (if any) specified in Table 102 into the output after the sign
-      character (possibly space) if there is one, or before the output of <tt>to_chars</tt> otherwise. For
-      floating-point
-      types, the alternate form causes the result of the conversion of finite values to always contain a decimal-point
-      character, even if no digits follow it. Normally, a decimal-point character appears in the result of these
-      conversions only if a digit follows it. In addition, for <tt>g</tt> and <tt>G</tt> conversions, trailing zeros are
-      not removed from
-      the result.
-    </i></p>
-
-  <p><i>
-      21 The available integer presentation types for integral types other than <tt>bool</tt> and <tt>charT</tt> are
-      specified in
-      Table 102.
-      [Example 4 :
-    </i>
-  <pre>
-      string s0 = format("{}", 42);                      // <i>value of</i> s0 <i>is</i> "42"
-      string s1 = format("{0:b} {0:d} {0:o} {0:x}", 42); // <i>value of</i> s1 <i>is</i> "101010 42 52 2a"
-      string s2 = format("{0:#x} {0:#X}", 42);           // <i>value of</i> s2 <i>is</i> "0x2a 0X2A"
-      string s3 = format("{:L}", 1234);                  // <i>value of</i> s3 <i>can be</i> "1,234"
-                                                         // <i>(depending on the locale)</i>
-    </pre><i>— end example]</i>
-  </p>
-
-  <p><i>
-      Table 102 — Meaning of type options for integer types [tab:format.type.int]
-      <table border="1">
-        <tr>
-          <th>Type</th>
-          <th align="left">Meaning</th>
-        </tr>
-        <tr>
-          <td><tt>o</tt></td>
-          <td><tt>to_chars(first, last, value, 8);</tt> the base prefix is <tt>0</tt> if <tt>value</tt> is nonzero and
-            is empty otherwise.</td>
-        </tr>
-      </table>
-    </i></p> -->
-
+  <table border="1">
+    <tr><td><b>Solution</b></td><td><b>1</b></td><td><b>2</b></td><td><b>3</b></td><td><b>4</b></td><td><b>5</b></td></tr>
+    <tr><td><b>Votes</b></td><td>1</td><td>0</td><td>4</td><td>1</td><td>0</td></tr>
+  </table>
+  <p>While option 3 was the preferred solution, everyone agreed that none of the options are ideal.</p>
 
   <a name="Acknowledgements"></a>
   <h2>Acknowledgements</h2>
