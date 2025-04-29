@@ -284,10 +284,17 @@
     // The option #O does not exist
   </pre>
 
-  <p>To follow the deprecation of the <i>unprefixed-octal-literal</i>, we would prefer a behavior change in the output
-    of <tt>std::format</tt> with <tt>#o</tt>. <a href="https://www.open-std.org/jtc1/sc22/wg14/www/docs/n3353.htm">N3353</a> calls out this problem, but does not attempt to solve it.
-    As backward-compatible alternatives, we propose several options:
   <p>
+    To follow the deprecation of the <i>unprefixed-octal-literal</i>, we would prefer a behavior change in the output
+    of <tt>std::format</tt> with <tt>#o</tt>. By using the search term "<tt>std::format #o language:C++</tt>" on GitHub
+    we found that the format specifier <tt>#o</tt> was used in only 23 files and out of those, 13 are educational
+    examples and 5 are test suites. This could indicate that a behavior change will have minimal impact on existing code.
+  </p>
+  <p>
+    <a href="https://www.open-std.org/jtc1/sc22/wg14/www/docs/n3353.htm">N3353</a> calls out this problem, but does not attempt to solve it.
+    As backward-compatible alternatives, we propose several options:
+  </p>
+
   <h3>Option 1</h3>
   <p><i>Add the <tt>#O</tt> option, to return <tt>0o</tt></i></p>
   <li>Con: inconsistent with the convention that e.g., <tt>#X</tt> returns upper-case <tt>0X</tt></li>
