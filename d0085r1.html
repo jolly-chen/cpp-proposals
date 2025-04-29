@@ -75,7 +75,7 @@
   <h3>Since <a href="https://wg21.link/p0085r0">P0085R0</a></h3>
   <ul>
     <li>Rebased Technical Specification onto <a href="https://wg21.link/n5008">N5008</a></li>
-    <li>Propose deprecation of orgiinal octal literal</li>
+    <li>Propose deprecation of original octal literal</li>
     <li>Removed proposed change "Technical Specification C run time library functions: strol, scanf". This has been
       handled by C in
       <a href="https://www.open-std.org/jtc1/sc22/wg14/www/docs/n3353.htm">N3353</a>.
@@ -92,18 +92,14 @@
   </p>
   <p>
     The syntax rule to interpret integer literals starting with a zero as
-    octal-literals probably dates back from the time people were still
-    tinkering with 8 or 16 bit processors in their garages.
-    This syntax rule is what might be called an ’historical mistake’.
-    Nowadays, this feature is hardly used and can be easily misunderstood or
-    overseen by novice programmers leading to unexpected errors.
+    octal-literals might be called a ’historical mistake’.
+    It can be easily misunderstood by novice programmers leading to unexpected errors.
   </p>
   <p>
     To allow future generations (of developers if not compilers) to correct this feature,
-    I propose to add the character sequence <tt>0o</tt> as an alternative
-    (and preferred) sequence to introduce an octal-literal.
-    The prefix <tt>0o</tt> follows the model set by the prefix <tt>0x</tt> to introduce a hex-literal, and (since c++14)
-    <tt>0b</tt> to introduce a binary-literal.
+    we propose to add the character sequence <tt>0o</tt> and  <tt>0O</tt>  as preferred sequences to
+    introduce an octal-literal. The prefix <tt>0o</tt> follows the model set by the prefix <tt>0x</tt>
+    to introduce a hex-literal, and (since c++14) <tt>0b</tt> to introduce a binary-literal.
   </p>
 
   <p>
@@ -129,31 +125,24 @@
 
   <a name="Examples"></a>
   <h2>Examples</h2>
-  <pre><code>
-  // The following literals all specify the same number.
-
-  int literal_octal_prefered          = 0o52;
-  int literal_octal_to_be_deprecated  = 052;
-  int literal_decimal                 = 42;
-  int literal_hex                     = 0x2A;
-  int literal_binary                  = 0b00101010;
-  </code>
-  </pre>
+  The following literals all specify the same number.
+  <table border="1">
+    <tr><th>Literal</th><th>Before</th><th>After</th></tr>
+    <tr><td>Hex</td><td>0x2A</td><td>0x2A</td></tr>
+    <tr><td>Binary</td><td>0b00101010</td><td>0b00101010</td></tr>
+    <tr><td>Octal</td><td>052</td><td>0o52</td></tr>
+  </table>
 
   <a name="Effects on existing code"></a>
   <h2>Effects on existing code</h2>
   <p>
-    This proposal does not invalidate the existing syntax rule for integer literals starting with a zero.
-    Also, under the current standard, any sequence starting with 0o is illegal.
-    As a consequence, the proposed modification will not break existing code.
+    This proposal deprecates the existing error-prone syntax rule for integer literals starting with a zero, following
+    the example of C (<a href="https://www.open-std.org/jtc1/sc22/wg14/www/docs/n3353.htm">N3353</a>). It introduces 0o as a new prefix for octal-literals. Additionally, it deprecates the use
+    of non-zero octal integer literals without the prefix 0o or 0O, similar to C declaring this an obsolescent feature.
   </p>
-
-  <a name="Discussion"></a>
-  <h2>Discussion</h2>
   <p>
-    The objective of this proposal is to create the possibility, by adding this more coherent syntax to introduce
-    octal-literals,
-    to deprecate and phase out the current octal literal syntax in a future version (if so decided).
+    Under the current standard, any sequence starting with 0o is illegal.
+    Consequently, the proposed additions <tt>0o</tt> and <tt>0O</tt> will not break existing code.
   </p>
 
   <h2><a name="6.0">Technical Specification</a></h2>
@@ -295,47 +284,31 @@
     // The option #O does not exist
   </pre>
 
-  <p>To deprecate the <i>unprefixed-octal-literal</i>, we require a behaviour change in the output
-    of <tt>std::format</tt> with the <tt>#o</tt>. As alternatives, we propose several options:
+  <p>To follow the deprecation of the <i>unprefixed-octal-literal</i>, we would prefer a behavior change in the output
+    of <tt>std::format</tt> with <tt>#o</tt>. <a href="https://www.open-std.org/jtc1/sc22/wg14/www/docs/n3353.htm">N3353</a> calls out this problem, but does not attempt to solve it.
+    As backward-compatible alternatives, we propose several options:
   <p>
   <h3>Option 1</h3>
-  <p><i>Add the <tt>#O</tt> option, returns <tt>0o</tt></i></p>
+  <p><i>Add the <tt>#O</tt> option, to return <tt>0o</tt></i></p>
   <li>Con: inconsistent with the convention that e.g., <tt>#X</tt> returns upper-case <tt>0X</tt></li>
   <li>Con: can be confused with the option <tt>#0</tt></li>
 
   <h3>Option 2</h3>
-  <p><i>Add the <tt>#o</tt> option, returns <tt>0O</tt></i></p>
+  <p><i>Add the <tt>#O</tt> option, to return <tt>0O</tt></i></p>
   <li>Pro: consistent with the convention that e.g., <tt>#X</tt> returns upper-case <tt>0X</tt></li>
-  <li>Con: <tt>0O</tt> is less readable than <tt>0o</tt>, so we do not want to encourage its use</li>
+  <li>Con: <tt>0O</tt> is less readable than <tt>0o</tt>, so we do not want to encourage its use because <tt>0O</tt> can
+       be confused with the letter O</li>
+  </li>
 
   <h3>Option 3</h3>
-  <p><i>Add the <tt>#0o</tt> and <tt>#0O</tt> options, return <tt>0o</tt> and <tt>0o</tt> respectively</i></p>
-  <li>Pro: can format for both <tt>0o</tt> and <tt>0O</tt></li>
-  <li>Con: inconsistent with all other format specifier options for <tt>#</tt> which are only one letter</li>
-  <li>Con: can be confused with the padding option <tt>0</tt>: currently <tt>std::format("{:#05o}", 42)</tt>
-           gives <tt>00052</tt> and this option would give <tt>0o52</tt> for <tt>std::format("{:#0o}", 42)</tt>.
-  </li>
-  <p>note: also add <tt>#0b, #0B, #0x, #0X</tt> for consistency?</p>
-
-  <h3>Option 4</h3>
-  <p><i>Add the <tt>##o</tt> and <tt>##O</tt> options, return <tt>0o</tt> and <tt>0o</tt> respectively</i></p>
-  <li>Rationale: <tt>#o</tt> asks for a single character prefix and <tt>##o</tt> askss for a 2 character prefix</li>
+  <p><i>Add the <tt>##o</tt> and <tt>##O</tt> options, to return <tt>0o</tt> and <tt>0O</tt> respectively</i></p>
+  <li>Rationale: <tt>#o</tt> asks for a single character prefix and <tt>##o</tt> asks for a 2 character prefix</li>
   <li>Pro: can format for both <tt>0o</tt> and <tt>0O</tt></li>
   <li>Con: maybe a bit obscure</li>
 
-  <h3>Option 5</h3>
+  <h3>Option 4</h3>
   <p><i>Do Nothing</i></p>
-  <li>Con: <tt>std::format</tt> only outputs the depecrated octal-literal</li>
-
-  <h3>Preferred Solution</h3>
-  <p>We asked 6 experienced C++ users in the development team of the C++ data analysis framework, ROOT,
-     for feedback on which solution they would prefer.
-  </p>
-  <table border="1">
-    <tr><td><b>Solution</b></td><td><b>1</b></td><td><b>2</b></td><td><b>3</b></td><td><b>4</b></td><td><b>5</b></td></tr>
-    <tr><td><b>Votes</b></td><td>1</td><td>0</td><td>4</td><td>1</td><td>0</td></tr>
-  </table>
-  <p>While option 3 was the preferred solution, everyone agreed that none of the options are ideal.</p>
+  <li>Con: <tt>std::format</tt> only outputs the deprecated octal-literal</li>
 
   <a name="Acknowledgements"></a>
   <h2>Acknowledgements</h2>
