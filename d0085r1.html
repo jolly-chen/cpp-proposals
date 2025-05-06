@@ -97,12 +97,12 @@
     introduce an octal-literal. The prefix <tt>0o</tt> follows the model set by the prefix <tt>0x</tt>
     to introduce a hex-literal, and (since c++14) <tt>0b</tt> to introduce a binary-literal.
     Compilers will be able to warn about the use of the deprecated <tt>0</tt> prefix,
-    and eventually (on the scale of a few releases) we would like to remove the old syntax.
+    and eventually (on the scale of a few releases) the old syntax can be removed.
   </p>
 
   <p>
     From <a
-      href="http://en.wikipedia.org/wiki/Octal">http://en.wikipedia.org/wiki/Octal//en.wikipedia.org/wiki/Octal</a>) :
+      href="http://en.wikipedia.org/wiki/Octal">http://en.wikipedia.org/wiki/Octal//en.wikipedia.org/wiki/Octal</a>:
     <i>
       "Newer languages have been abandoning the prefix 0, as decimal numbers
       are often represented with leading zeroes.
@@ -130,7 +130,7 @@
     <tr><td>Binary</td><td>0b00101010</td><td>0b00101010</td></tr>
     <tr><td>Octal</td><td>052</td><td>0o52</td></tr>
   </table>
-  <p>The old literal will remain unchanged, but it will be deprecated.</p>
+  <p>The old octal literal <tt>052</tt> will continue to remain valid but deprecated.</p>
 
   <a name="Effects on existing code"></a>
   <h2>Effects on existing code</h2>
