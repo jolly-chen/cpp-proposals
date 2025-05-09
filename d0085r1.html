@@ -1,13 +1,4 @@
-<html data-lt-installed="true"><!--
-  questions:
-  - deprecate octal constants starting with a leading zero at the same time as introducing this proposal?
-  - modify also octal escape sequences in character constants as proposed in the addendum?
-  - allow binary escape sequences in character constants (for coherency)?
-  - prescribe the behaviour of compilers in case the value of a character literal falls outside the implementation-defined range defined for char.
-  - synchronise standardization with C standard?
-  - propose a change of the C-run time library function strol?
-  -->
-
+<html data-lt-installed="true">
 <head>
   <meta http-equiv="content-type" content="text/html; charset=windows-1252">
   <title>Oo... adding a coherent character sequence to start octal-literals</title>
@@ -98,7 +89,7 @@
   <p>
     The syntax rule to interpret integer literals starting with a zero as
     octal-literals might be called a ’historical mistake’.
-    It can be easily misunderstood by novice programmers leading to unexpected errors.
+    It can be easily misunderstood by novice programmers and can lead to surprising errors.
   </p>
   <p>
     To allow future generations (of developers if not compilers) to correct this feature,
@@ -106,12 +97,12 @@
     introduce an octal-literal. The prefix <tt>0o</tt> follows the model set by the prefix <tt>0x</tt>
     to introduce a hex-literal, and (since c++14) <tt>0b</tt> to introduce a binary-literal.
     Compilers will be able to warn about the use of the deprecated <tt>0</tt> prefix,
-    and eventually (on the scale of a few releases) we would like to remove the old syntax.
+    and eventually (on the scale of a few releases) the old syntax can be removed.
   </p>
 
   <p>
     From <a
-      href="http://en.wikipedia.org/wiki/Octal">http://en.wikipedia.org/wiki/Octal//en.wikipedia.org/wiki/Octal</a>) :
+      href="http://en.wikipedia.org/wiki/Octal">http://en.wikipedia.org/wiki/Octal//en.wikipedia.org/wiki/Octal</a>:
     <i>
       "Newer languages have been abandoning the prefix 0, as decimal numbers
       are often represented with leading zeroes.
@@ -139,7 +130,7 @@
     <tr><td>Binary</td><td>0b00101010</td><td>0b00101010</td></tr>
     <tr><td>Octal</td><td>052</td><td>0o52</td></tr>
   </table>
-  <p>The old literal will remain unchanged, but it will be deprecated.</p>
+  <p>The old octal literal <tt>052</tt> will continue to remain valid but deprecated.</p>
 
   <a name="Effects on existing code"></a>
   <h2>Effects on existing code</h2>
