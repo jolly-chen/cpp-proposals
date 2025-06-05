@@ -1,4 +1,5 @@
 <html data-lt-installed="true">
+
 <head>
   <meta http-equiv="content-type" content="text/html;">
   <title>Oo... adding a coherent character sequence to start octal-literals</title>
@@ -43,7 +44,7 @@
       </tr>
       <tr>
         <td align="left">Date:</td>
-        <td align="left">22-05-2025</td>
+        <td align="left">05-06-2025</td>
       </tr>
       <tr>
         <td align="left">Project:</td>
@@ -67,8 +68,11 @@
 
   <a name="Revision History"></a>
   <h2>Revision History</h2>
-  <h3>Since <a href="https://wg21.link/p0085r0">P0085R1</a></h3>
+  <h3>Since <a href="https://wg21.link/p0085r1">P0085R1</a></h3>
   <ul>
+    <li>Fix mismatch in technical specification of integer literals and lexical conventions</li>
+    <li>Extend examples with common traps where octal-literals are assumed to be decimals by the programmer</li>
+    <li>Extend effects on existing code</li>
     <li>Fixed encoding of ’</li>
   </ul>
   <h3>Since <a href="https://wg21.link/p0085r0">P0085R0</a></h3>
@@ -88,21 +92,27 @@
 
   <a name="Proposal"></a>
   <h2>Proposal</h2>
-  <p>Proposal to add <tt>0o</tt> and <tt>0O</tt> as an alternative (and preferred) sequence to introduce octal-literals
-    and deprecate the old prefix <tt>0</tt>.
+  <p>Proposal to <b>add <tt>0o</tt></b> and<b> <tt>0O</tt></b> as an alternative (and preferred) sequence to introduce
+    octal-literals and <b>deprecate use of the old prefix <tt>0</tt></b> for non-zero octal-literals.
   </p>
   <p>
     The syntax rule to interpret integer literals starting with a zero as
-    octal-literals might be called a ’historical mistake’.
+    octal-literals might be called a 'historical mistake'.
     It can be easily misunderstood by novice programmers and can lead to surprising errors.
   </p>
   <p>
     To allow future generations (of developers if not compilers) to correct this feature,
-    we propose to add the character sequence <tt>0o</tt> and  <tt>0O</tt>  as preferred sequences to
+    we propose to add the character sequence <tt>0o</tt> and <tt>0O</tt> as preferred sequences to
     introduce an octal-literal. The prefix <tt>0o</tt> follows the model set by the prefix <tt>0x</tt>
     to introduce a hex-literal, and (since c++14) <tt>0b</tt> to introduce a binary-literal.
-    Compilers will be able to warn about the use of the deprecated <tt>0</tt> prefix,
-    and eventually (on the scale of a few releases) the old syntax can be removed.
+  </p>
+  <p>
+    Additionally, we propose to deprecate the use of octal integer literals with the <tt>0</tt> prefix, <i>
+      apart from <tt>0</tt> itself</i>; this is similar to C declaring the use of nonzero octal integer literals
+    without the prefix <tt>0o</tt> or <tt>0O</tt> an obsolescent feature (see 6.11.5 in <a
+      href="https://www.open-std.org/jtc1/sc22/wg14/www/docs/n3550.pdf">C2y draft</a>). This opens the door for
+    compilers to warn about the use of the deprecated <tt>0</tt> prefix, and eventually (on the scale of a few
+    releases), potentially interpret numbers with leading zeroes as decimals.
   </p>
 
   <p>
@@ -125,28 +135,92 @@
     </i>
   </p>
 
+  <p>
+    This proposal now reflects a recent corresponding change in C
+    (<a href="https://www.open-std.org/jtc1/sc22/wg14/www/docs/n3353.htm">N3353</a>)
+    that was triggered by an earlier version of this proposal.
+  </p>
+
 
   <a name="Examples"></a>
   <h2>Examples</h2>
-  <p>The following literals all specify the same number.</p>
-  <table border="1">
+  <h3>Padding</h3>
+  <p>Padding leading zeros are often (attempted to be) used to nicely align numbers. This leads
+    to surprising results if the programmer expected the number to be interpreted as a decimal. For
+    example:
+  </p>
+
+  <ul>
+    <li>
+      <p>Table of numbers:
+      <pre>
+      std::array&lt;std::array&lt;int, 2&gt;, 2&gt; table = {
+        { 100, 042 },
+        { 107, 000 }
+      };</pre>
+      In this case, the programmer intended to write the decimal numbers <tt>100, 42, 107</tt>, and <tt>0</tt>. However,
+      the values <tt>000</tt> and <tt>042</tt> are interpreted as octal-literals. While the octal-literal <tt>000</tt>
+      is equivalent to the intended decimal number <tt>0</tt>, the octal-literal
+      <tt>042</tt> is equivalent to the decimal number <tt>34</tt>, triggering bugs that are hard to find by the
+      octal-unaware
+      programmer or reader of code.
+      </p>
+    </li>
+
+    <li>
+      <p>Examples for issued caused by padding version numbers:
+      <ul>
+        <li><a
+            href="https://github.com/AcademySoftwareFoundation/OpenColorIO/issues/1818">https://github.com/AcademySoftwareFoundation/OpenColorIO/issues/1818</a>
+        </li>
+        <li><a href="https://github.com/ThePhD/sol2/issues/265">https://github.com/ThePhD/sol2/issues/265</a></p>
+        </li>
+      </ul>
+    </li>
+  </ul>
+
+
+  <h3>After this proposal</h3>
+  <p>Following this proposal, these literals all specify the same number:
+    <!-- beautify ignore:start -->
+  <table border="1" style="border-collapse:collapse; margin: 1em">
     <tr><th>Literal</th><th>Before</th><th>After</th></tr>
     <tr><td>Hex</td><td>0x2A</td><td>0x2A</td></tr>
     <tr><td>Binary</td><td>0b00101010</td><td>0b00101010</td></tr>
     <tr><td>Octal</td><td>052</td><td>0o52</td></tr>
   </table>
-  <p>The old octal literal <tt>052</tt> will continue to remain valid but deprecated.</p>
+  <p>The old octal literal <tt>052</tt> will remain valid but deprecated.</p>
+  <!-- beautify ignore:end -->
+  </p>
 
   <a name="Effects on existing code"></a>
   <h2>Effects on existing code</h2>
   <p>
-    This proposal deprecates the existing error-prone syntax rule for integer literals starting with a zero, following
-    the example of C (<a href="https://www.open-std.org/jtc1/sc22/wg14/www/docs/n3353.htm">N3353</a>). It introduces 0o as a new prefix for octal-literals. Additionally, it deprecates the use
-    of non-zero octal integer literals without the prefix 0o or 0O, similar to C declaring this an obsolescent feature.
+    This proposal introduces <tt>0o</tt> and <tt>0O</tt> as new prefixes for octal-literals.
+    Under the current standard, any sequence starting with <tt>0o</tt> or <tt>0O</tt> is illegal.
+    Consequently, the proposed additions <tt>0o</tt> and <tt>0O</tt> will not break existing code.
   </p>
   <p>
-    Under the current standard, any sequence starting with 0o is illegal.
-    Consequently, the proposed additions <tt>0o</tt> and <tt>0O</tt> will not break existing code.
+    Additionally, this proposal deprecates the existing error-prone syntax rule for non-zero integer literals starting
+    with a zero, following the example of C (<a href="https://www.open-std.org/jtc1/sc22/wg14/www/docs/n3353.htm">N3353</a>).
+    This would affect existing, traditional octal-literals (i.e. with a leading <tt>0</tt>), for instance when defining
+    POSIX file permissions (sometimes padded with multiple leading zeros), as seen in popular
+    repositories (&gt;500 stars) e.g., <a
+      href="https://github.com/root-project/root/blob/b690e5c5f91a2131ef8595d85644f72f87221cdf/core/base/inc/TSystem.h#L96">ROOT</a>,
+    <a
+      href="https://github.com/qt-creator/qt-creator/blob/ec06e808a00049352519d11dc5552ed3ec71d8e1/src/libs/gocmdbridge/client/bridgedfileaccess.cpp#L266">Qt
+      Creator</a>,
+    <a
+      href="https://github.com/InstantWebP2P/node-android/blob/e4652cc09233c35393bf1089d7871e31f2cb1941/app/src/main/jni/constants.cpp#L60">node-android</a>,
+    <a
+      href="https://github.com/KDE/kdiff3/blob/2cfe5cfd2bbf79a5562099de39da27b4100578e7/src/fileaccess.cpp#L440">KDiff3</a>.
+  </p>
+  <p>
+    We have received concerns that this deprecation leads to warnings for octal-literals that have the same
+    value whether interpreted as octal or decimal. Examples of such literals are:
+    <tt>01, 02, 03, 04, 05, 06, 07</tt>.
+    To keep the door open for a future proposal introducing <tt>01...09</tt> as decimal literals (typical use case:
+    <tt>1970y/January/01d</tt>), implementations might choose to not diagnose <tt>01..07</tt>.
   </p>
 
   <h2><a name="6.0">Technical Specification</a></h2>
@@ -154,8 +228,8 @@
   <p>
     To match <a href="https://www.open-std.org/jtc1/sc22/wg14/www/docs/n3353.htm">N3353</a>,
     make the following edits (relative to
-    <a href="wg21.link/n5008">N5008</a>)
-    with <ins>insertions</ins> and <del>removals</del> marked like so:
+    <a href="https://wg21.link/n5008">N5008</a>),
+    highlighting the <ins>insertions</ins> and <del>removals</del>:
   </p>
 
   <h3><a name="5.13.2">5.13.2 Integer literals [lex.icon]</a></h3>
@@ -195,6 +269,7 @@
     </i>
   </p>
   <h3><a name="31.12.8.4">31.12.8.4 Enum class <tt>perm</tt> [fs.enum.perms]</a></h3>
+  <!-- beautify ignore:start -->
   <p>Table 149 — Enum class perms [tab:fs.enum.perms]
   <table border="1">
     <tr><th>Name</th><th>Value (octal)</th><th>POSIX macro</th><th>Definition or notes</th></tr>
@@ -218,6 +293,7 @@
     <tr><td><tt>mask</tt></td><td><tt>0<ins>o</ins>7777</tt></td><td></td><td><tt>all | set_uid | set_gid | sticky_bit</tt></td></tr>
     <tr><td><tt>unknown</tt></td><td><tt>0xFFFF</tt></td><td></td><td>The permissions are not known, such as when a <tt>file_status</tt> object is created without specifying the permissions</td></tr>
   </table>
+  <!-- beautify ignore:end -->
 
   <h3><a name="A.3">A.3 Lexical conventions [gram.lex]</a></h3>
   <pre>
@@ -229,7 +305,7 @@
     </i>
     <i><ins>unprefixed-octal-literal:</ins>
       <ins>0</ins>
-      <ins>0 ’<sub>opt</sub> octal-digit</ins>
+      <ins>0 ’<sub>opt</sub> octal-digit-sequence</ins>
     </i>
     <i><ins>prefixed-octal-literal:</ins>
       <ins>octal-prefix octal-digit-sequence</ins></i>
@@ -238,8 +314,7 @@
   <p>Before <i>hexadecimal-prefix</i> insert</p>
   <pre>
     <i><ins>octal-prefix: one of</ins>
-      <ins>0o</ins>
-      <ins>0O</ins></i>
+      <ins>0o 0O</ins></i>
   </pre>
 
   <p>Before <i>hexadecimal-digit-sequence</i> insert</p>
@@ -255,7 +330,7 @@
   <p>
   <h4><ins>D??. Deprecated unprefixed octal literal [depr.oct]</ins></h4>
   </p>
-  <p><ins>1 An octal literal ([lex.icon], [gram.lex]) of the form</ins>
+  <p><ins>1 A non-zero octal literal ([lex.icon], [gram.lex]) of the form</ins>
   <pre>
     <ins><i>unprefixed-octal-literal</i></ins></pre>
   <ins>is deprecated.</ins></p>
@@ -277,7 +352,8 @@
                                                        // <i>(depending on the locale)</i></pre><i>— end example]</i>
   </p>
 
-  <p> The example shows that <tt>std::format</tt> returns a consistent base prefix for the alternate form <tt>#</tt> option with a
+  <p> The example shows that <tt>std::format</tt> returns a consistent base prefix for the alternate form <tt>#</tt>
+    option with a
     hexadecimal type -- <tt>0x</tt> for <tt>#x</tt> and <tt>0X</tt> for <tt>#X</tt>.
     However, the same is not true for the <tt>#</tt> option with an octal type, where we would have:
   </p>
@@ -289,7 +365,8 @@
   </pre>
 
   <p>
-    To follow the deprecation of the <i>unprefixed-octal-literal</i>, we would prefer a behavior change in the output
+    To follow the deprecation of the non-zero <i>unprefixed-octal-literal</i>, we would prefer a behavior change in the
+    output
     of <tt>std::format</tt> with <tt>#o</tt> to use the prefix <tt>0o</tt>. By using the search term
     "<tt>std::format #o language:C++</tt>" on GitHub, we found that the format specifier <tt>#o</tt> was used in only
     23 files and out of those, 13 are educational examples and 5 are test suites. This could indicate that a behavior
@@ -297,7 +374,8 @@
     security implications), we recommend this backward-incompatible change.
   </p>
   <p>
-    <a href="https://www.open-std.org/jtc1/sc22/wg14/www/docs/n3353.htm">N3353</a> calls out this problem, but does not attempt to solve it.
+    <a href="https://www.open-std.org/jtc1/sc22/wg14/www/docs/n3353.htm">N3353</a> calls out this problem, but does not
+    attempt to solve it.
     As backward-compatible alternatives, we propose several options:
   </p>
 
@@ -310,7 +388,7 @@
   <p><i>Add the <tt>#O</tt> option, to return <tt>0O</tt></i></p>
   <li>Pro: consistent with the convention that e.g., <tt>#X</tt> returns upper-case <tt>0X</tt></li>
   <li>Con: <tt>0O</tt> is less readable than <tt>0o</tt>, so we do not want to encourage its use because <tt>0O</tt> can
-       be confused with the letter O</li>
+    be confused with the letter O</li>
   </li>
 
   <h3>Option 3</h3>
