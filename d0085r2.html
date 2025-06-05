@@ -110,7 +110,7 @@
     Additionally, we propose to deprecate the use of octal integer literals with the <tt>0</tt> prefix;
     this is similar to C declaring the <tt>0</tt> prefix as an obsolescent feature.
     This opens the door for compilers to warn about the use of the deprecated <tt>0</tt> prefix,
-    and eventually (on the scale of a few releases) interpret numbers with leading zeroes as decimals.
+    and eventually (on the scale of a few releases), potentially interpret numbers with leading zeroes as decimals.
   </p>
 
   <p>
@@ -147,49 +147,45 @@
       <p>Table of numbers:
       <pre>
       std::array&lt;std::array&lt;int, 2&gt;, 2&gt; table = {
-        { 100, 008 },
-        { 007, 000 }
+        { 100, 042 },
+        { 107, 000 }
       };</pre>
-      In this case, the programmer intended to write the decimal numbers <tt>100, 8, 7</tt>, and <tt>000</tt>. However,
+      In this case, the programmer intended to write the decimal numbers <tt>100, 42, 107</tt>, and <tt>0</tt>. However,
       the
-      values <tt>000, 008</tt>, and <tt>007</tt> are interpreted as octal-literals. The octal-literals <tt>000</tt> and
-      <tt>007</tt> are equivalent to the intended decimal numbers <tt>0</tt> and <tt>7</tt>, respectively, while the
-      octal-literal
-      <tt>008</tt> is illegal, as it contains the digit <tt>8</tt>, which is not a valid octal digit.
+      values <tt>000</tt> and <tt>042</tt> are interpreted as octal-literals. While the octal-literal <tt>000</tt> is
+      equivalent to the intended decimal number <tt>0</tt>, the octal-literal
+      <tt>042</tt> is equivalent to the decimal number <tt>34</tt>.
       </p>
     </li>
 
     <li>
-      <p>Padding C++20 date literals:
-      <pre>auto ymd = 2024y/03/09d;</pre>
-      In this case, the programmer intended to write the date <tt>2024-March-09</tt>, but the literal <tt>09</tt> is
-      interpreted as an octal-literal and thus results in the error <tt>invalid digit '9' in octal constant</tt>.
-      </p>
+      <p>Padding version numbers:
+      <ul>
+        <li><a
+            href="https://github.com/AcademySoftwareFoundation/OpenColorIO/issues/1818">https://github.com/AcademySoftwareFoundation/OpenColorIO/issues/1818</a>
+        </li>
+        <li><a href="https://github.com/ThePhD/sol2/issues/265">https://github.com/ThePhD/sol2/issues/265</a></p>
+        </li>
+      </ul>
     </li>
-
     <li>
-      <p>Padding version numbers: <a
-          href="https://github.com/ThePhD/sol2/issues/265">https://github.com/ThePhD/sol2/issues/265</a></p>
+      strto_l:
+      Several GitHub issues have been reported where the <tt>strto*</tt> functions with base auto-detection were used to
+      parse numbers, but they were not aware of the octal-literal syntax rule. The <tt>strto_l</tt> functions interpret
+      the leading zero as an octal prefix, instead of as a decimal as the user expected:
+      <ul>
+        <li><a href="https://github.com/FreeCAD/FreeCAD/issues/17555">https://github.com/FreeCAD/FreeCAD/issues/17555</a>
+        </li>
+        <li><a
+            href="https://github.com/ClickHouse/ClickHouse/issues/54380">https://github.com/ClickHouse/ClickHouse/issues/54380</a>
+        </li>
+        <li><a
+            href="https://github.com/akrennmair/newsbeuter/issues/186">https://github.com/akrennmair/newsbeuter/issues/186</a>
+        </li>
+      </ul>
     </li>
   </ul>
 
-
-  <p>
-  <h3>strto*</h3>
-  Several GitHub issues have been reported where the <tt>strto*</tt> functions with base auto-detection were used to
-  parse numbers, but they were not aware of the octal-literal syntax rule. The <tt>strto*</tt> functions interpret
-  the leading zero as an octal prefix, instead of as a decimal as the user expected:
-  <ul>
-    <li><a href="https://github.com/FreeCAD/FreeCAD/issues/17555">https://github.com/FreeCAD/FreeCAD/issues/17555</a>
-    </li>
-    <li><a
-        href="https://github.com/ClickHouse/ClickHouse/issues/54380">https://github.com/ClickHouse/ClickHouse/issues/54380</a>
-    </li>
-    <li><a
-        href="https://github.com/akrennmair/newsbeuter/issues/186">https://github.com/akrennmair/newsbeuter/issues/186</a>
-    </li>
-  </ul>
-  </p>
 
   <h3>After this proposal</h3>
   <p>Following this proposal, the following literals all specify the same number.
@@ -200,6 +196,7 @@
     <tr><td>Binary</td><td>0b00101010</td><td>0b00101010</td></tr>
     <tr><td>Octal</td><td>052</td><td>0o52</td></tr>
   </table>
+  <p>The old octal literal <tt>052</tt> will continue to remain valid but deprecated.</p>
   <!-- beautify ignore:end -->
   </p>
 
@@ -216,17 +213,18 @@
     We have received concerns that this deprecation leads to unwarranted warnings for octal-literals that have the same
     the value, whether they are interpreted as octal or decimal. Examples of such literals are:
     <tt>0, 00, 01, 02, 03, 04, 05, 06, 07</tt>. But also octal-literals that are used to define POSIX file permissions
-    (sometimes padded with multiple leading zeros), which are intended to be interpreted as octals, as seen in popular repositories (&gt;500 stars) e.g., <a
+    (sometimes padded with multiple leading zeros), which are intended to be interpreted as octals, as seen in popular
+    repositories (&gt;500 stars) e.g., <a
       href="https://github.com/root-project/root/blob/b690e5c5f91a2131ef8595d85644f72f87221cdf/core/base/inc/TSystem.h#L96">ROOT</a>,
     <a
       href="https://github.com/qt-creator/qt-creator/blob/ec06e808a00049352519d11dc5552ed3ec71d8e1/src/libs/gocmdbridge/client/bridgedfileaccess.cpp#L266">Qt
       Creator</a>,
-    <a href="https://github.com/InstantWebP2P/node-android/blob/e4652cc09233c35393bf1089d7871e31f2cb1941/app/src/main/jni/constants.cpp#L60">node-android</a>,
-    <a href="https://github.com/KDE/kdiff3/blob/2cfe5cfd2bbf79a5562099de39da27b4100578e7/src/fileaccess.cpp#L440">KDiff3</a>.
-    To avoid a confusing situation where unambiguous octal-literals result in warnings in the deprecation phase that
-    then disappear once numbers with leading zeroes are interpreted as decimal, compilers could choose to only issue
-    warnings for octal-literals that are ambiguous. For example, <tt>052</tt> or <tt>0700</tt> would result in warnings,
-    but unambiguous octal-literals such as <tt>007</tt> or <tt>0000</tt> would not result in a warning.
+    <a
+      href="https://github.com/InstantWebP2P/node-android/blob/e4652cc09233c35393bf1089d7871e31f2cb1941/app/src/main/jni/constants.cpp#L60">node-android</a>,
+    <a
+      href="https://github.com/KDE/kdiff3/blob/2cfe5cfd2bbf79a5562099de39da27b4100578e7/src/fileaccess.cpp#L440">KDiff3</a>.
+    To keep the door open for a future proposal introducing <tt>00...09</tt> as decimal literals (use case: <tt>1970/January/01d</tt>),
+    implementations might choose to not diagnose <tt>01..07</tt>.
   </p>
 
   <h2><a name="6.0">Technical Specification</a></h2>
