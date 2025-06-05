@@ -70,6 +70,7 @@
   <h2>Revision History</h2>
   <h3>Since <a href="https://wg21.link/p0085r1">P0085R1</a></h3>
   <ul>
+    <li>Fix mismatch in technical specification of integer literals and lexical conventions</li>
     <li>Extend examples with common traps where octal-literals are assumed to be decimals by the programmer</li>
     <li>Extend effects on existing code</li>
     <li>Fixed encoding of ’</li>
@@ -304,7 +305,7 @@
     </i>
     <i><ins>unprefixed-octal-literal:</ins>
       <ins>0</ins>
-      <ins>0 ’<sub>opt</sub> octal-digit</ins>
+      <ins>0 ’<sub>opt</sub> octal-digit-sequence</ins>
     </i>
     <i><ins>prefixed-octal-literal:</ins>
       <ins>octal-prefix octal-digit-sequence</ins></i>
@@ -313,8 +314,7 @@
   <p>Before <i>hexadecimal-prefix</i> insert</p>
   <pre>
     <i><ins>octal-prefix: one of</ins>
-      <ins>0o</ins>
-      <ins>0O</ins></i>
+      <ins>0o 0O</ins></i>
   </pre>
 
   <p>Before <i>hexadecimal-digit-sequence</i> insert</p>
