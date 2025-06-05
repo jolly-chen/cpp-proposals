@@ -92,8 +92,7 @@
   <a name="Proposal"></a>
   <h2>Proposal</h2>
   <p>Proposal to <b>add <tt>0o</tt></b> and<b> <tt>0O</tt></b> as an alternative (and preferred) sequence to introduce
-    octal-literals
-    and <b>deprecate use of the old prefix <tt>0</tt></b>.
+    octal-literals and <b>deprecate use of the old prefix <tt>0</tt></b> for non-zero octal-literals.
   </p>
   <p>
     The syntax rule to interpret integer literals starting with a zero as
@@ -107,10 +106,12 @@
     to introduce a hex-literal, and (since c++14) <tt>0b</tt> to introduce a binary-literal.
   </p>
   <p>
-    Additionally, we propose to deprecate the use of octal integer literals with the <tt>0</tt> prefix;
-    this is similar to C declaring the <tt>0</tt> prefix as an obsolescent feature.
-    This opens the door for compilers to warn about the use of the deprecated <tt>0</tt> prefix,
-    and eventually (on the scale of a few releases), potentially interpret numbers with leading zeroes as decimals.
+    Additionally, we propose to deprecate the use of octal integer literals with the <tt>0</tt> prefix, <i>
+      apart from <tt>0</tt> itself</i>; this is similar to C declaring the use of nonzero octal integer literals
+    without the prefix <tt>0o</tt> or <tt>0O</tt> an obsolescent feature (see 6.11.5 in <a
+      href="https://www.open-std.org/jtc1/sc22/wg14/www/docs/n3550.pdf">C2y draft</a>). This opens the door for
+    compilers to warn about the use of the deprecated <tt>0</tt> prefix, and eventually (on the scale of a few
+    releases), potentially interpret numbers with leading zeroes as decimals.
   </p>
 
   <p>
@@ -159,7 +160,8 @@
       In this case, the programmer intended to write the decimal numbers <tt>100, 42, 107</tt>, and <tt>0</tt>. However,
       the values <tt>000</tt> and <tt>042</tt> are interpreted as octal-literals. While the octal-literal <tt>000</tt>
       is equivalent to the intended decimal number <tt>0</tt>, the octal-literal
-      <tt>042</tt> is equivalent to the decimal number <tt>34</tt>, triggering bugs that are hard to find by the octal-unaware
+      <tt>042</tt> is equivalent to the decimal number <tt>34</tt>, triggering bugs that are hard to find by the
+      octal-unaware
       programmer or reader of code.
       </p>
     </li>
@@ -198,10 +200,10 @@
     Consequently, the proposed additions <tt>0o</tt> and <tt>0O</tt> will not break existing code.
   </p>
   <p>
-    Additionally, this proposal deprecates the existing error-prone syntax rule for integer literals starting with a
-    zero, following the example of C (<a href="https://www.open-std.org/jtc1/sc22/wg14/www/docs/n3353.htm">N3353</a>).
-    This would affect existing, traditional octal-literals (i.e. with a leading <tt>0</tt>), for instance when defining POSIX file permissions
-    (sometimes padded with multiple leading zeros), as seen in popular
+    Additionally, this proposal deprecates the existing error-prone syntax rule for non-zero integer literals starting
+    with a zero, following the example of C (<a href="https://www.open-std.org/jtc1/sc22/wg14/www/docs/n3353.htm">N3353</a>).
+    This would affect existing, traditional octal-literals (i.e. with a leading <tt>0</tt>), for instance when defining
+    POSIX file permissions (sometimes padded with multiple leading zeros), as seen in popular
     repositories (&gt;500 stars) e.g., <a
       href="https://github.com/root-project/root/blob/b690e5c5f91a2131ef8595d85644f72f87221cdf/core/base/inc/TSystem.h#L96">ROOT</a>,
     <a
@@ -215,10 +217,9 @@
   <p>
     We have received concerns that this deprecation leads to warnings for octal-literals that have the same
     value whether interpreted as octal or decimal. Examples of such literals are:
-    <tt>0, 00, 01, 02, 03, 04, 05, 06, 07</tt>. 
-    To keep the door open for a future proposal introducing <tt>00...09</tt> as decimal literals (typical use case:
-    <tt>1970y/January/01d</tt>),
-    implementations might choose to not diagnose <tt>01..07</tt>.
+    <tt>01, 02, 03, 04, 05, 06, 07</tt>.
+    To keep the door open for a future proposal introducing <tt>01...09</tt> as decimal literals (typical use case:
+    <tt>1970y/January/01d</tt>), implementations might choose to not diagnose <tt>01..07</tt>.
   </p>
 
   <h2><a name="6.0">Technical Specification</a></h2>
@@ -329,7 +330,7 @@
   <p>
   <h4><ins>D??. Deprecated unprefixed octal literal [depr.oct]</ins></h4>
   </p>
-  <p><ins>1 An octal literal ([lex.icon], [gram.lex]) of the form</ins>
+  <p><ins>1 A non-zero octal literal ([lex.icon], [gram.lex]) of the form</ins>
   <pre>
     <ins><i>unprefixed-octal-literal</i></ins></pre>
   <ins>is deprecated.</ins></p>
@@ -364,7 +365,8 @@
   </pre>
 
   <p>
-    To follow the deprecation of the <i>unprefixed-octal-literal</i>, we would prefer a behavior change in the output
+    To follow the deprecation of the non-zero <i>unprefixed-octal-literal</i>, we would prefer a behavior change in the
+    output
     of <tt>std::format</tt> with <tt>#o</tt> to use the prefix <tt>0o</tt>. By using the search term
     "<tt>std::format #o language:C++</tt>" on GitHub, we found that the format specifier <tt>#o</tt> was used in only
     23 files and out of those, 13 are educational examples and 5 are test suites. This could indicate that a behavior
