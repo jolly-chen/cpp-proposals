@@ -151,9 +151,8 @@
         { 107, 000 }
       };</pre>
       In this case, the programmer intended to write the decimal numbers <tt>100, 42, 107</tt>, and <tt>0</tt>. However,
-      the
-      values <tt>000</tt> and <tt>042</tt> are interpreted as octal-literals. While the octal-literal <tt>000</tt> is
-      equivalent to the intended decimal number <tt>0</tt>, the octal-literal
+      the values <tt>000</tt> and <tt>042</tt> are interpreted as octal-literals. While the octal-literal <tt>000</tt>
+      is equivalent to the intended decimal number <tt>0</tt>, the octal-literal
       <tt>042</tt> is equivalent to the decimal number <tt>34</tt>.
       </p>
     </li>
@@ -188,7 +187,7 @@
   <h2>Effects on existing code</h2>
   <p>
     This proposal introduces <tt>0o</tt> and <tt>0O</tt> as new prefixes for octal-literals.
-    Under the current standard, any sequence starting with 0o is illegal.
+    Under the current standard, any sequence starting with <tt>0o</tt> is illegal.
     Consequently, the proposed additions <tt>0o</tt> and <tt>0O</tt> will not break existing code.
   </p>
   <p>
@@ -207,7 +206,8 @@
       href="https://github.com/InstantWebP2P/node-android/blob/e4652cc09233c35393bf1089d7871e31f2cb1941/app/src/main/jni/constants.cpp#L60">node-android</a>,
     <a
       href="https://github.com/KDE/kdiff3/blob/2cfe5cfd2bbf79a5562099de39da27b4100578e7/src/fileaccess.cpp#L440">KDiff3</a>.
-    To keep the door open for a future proposal introducing <tt>00...09</tt> as decimal literals (use case: <tt>1970/January/01d</tt>),
+    To keep the door open for a future proposal introducing <tt>00...09</tt> as decimal literals (use case:
+    <tt>1970y/January/01d</tt>),
     implementations might choose to not diagnose <tt>01..07</tt>.
   </p>
 
