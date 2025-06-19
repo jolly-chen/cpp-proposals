@@ -69,26 +69,29 @@
   <a name="Revision History"></a>
   <h2>Revision History</h2>
   <h3>Since <a href="https://wg21.link/p0085r3">P0085R2</a></h3>
+  <ul>
+    <li>Update Wikipedia quote</li>
+  </ul>
   <h3>Since <a href="https://wg21.link/p0085r1">P0085R1</a></h3>
   <ul>
     <li>Fix mismatch in technical specification of integer literals and lexical conventions</li>
     <li>Extend examples with common traps where octal-literals are assumed to be decimals by the programmer</li>
     <li>Extend effects on existing code</li>
-    <li>Fixed encoding of ’</li>
+    <li>Fix encoding of ’</li>
   </ul>
   <h3>Since <a href="https://wg21.link/p0085r0">P0085R0</a></h3>
   <ul>
-    <li>Rebased Technical Specification onto <a href="https://wg21.link/n5008">N5008</a></li>
+    <li>Rebase Technical Specification onto <a href="https://wg21.link/n5008">N5008</a></li>
     <li>Align grammar with C's <a href="https://www.open-std.org/jtc1/sc22/wg14/www/docs/n3353.htm">N3353</a></li>
     <li>Propose deprecation of original octal literal</li>
-    <li>Removed proposed change "Technical Specification C run time library functions: strol, scanf". This has been
+    <li>Remove proposed change "Technical Specification C run time library functions: strol, scanf". This has been
       handled by C in
       <a href="https://www.open-std.org/jtc1/sc22/wg14/www/docs/n3353.htm">N3353</a>.
     </li>
-    <li>Removed proposed change to Addendum, character literals. Octals in escape sequences have been added by
+    <li>Remove proposed change to Addendum, character literals. Octals in escape sequences have been added by
       <a href="https://wg21.link/p2290">P2290R3</a>
     </li>
-    <li>Added open question on <tt>std::format</tt> with the <tt>#</tt> option for octal literals</li>
+    <li>Add open question on <tt>std::format</tt> with the <tt>#</tt> option for octal literals</li>
   </ul>
 
   <a name="Proposal"></a>
@@ -120,19 +123,14 @@
     From <a
       href="http://en.wikipedia.org/wiki/Octal">http://en.wikipedia.org/wiki/Octal//en.wikipedia.org/wiki/Octal</a>:
     <i>
-      "Newer languages have been abandoning the prefix 0, as decimal numbers
-      are often represented with leading zeroes.
-      The prefix q was introduced to avoid the prefix o being mistaken for a
-      zero,
-      while the prefix 0o was introduced to avoid starting a numerical literal
-      with an alphabetic character (like o or q),
-      since these might cause the literal to be confused with a variable name.
-      The prefix 0o also follows the model set by the prefix 0x used for
-      hexadecimal literals in the C language;
-      it is supported by Haskell,[11] OCaml,[12] Perl 6,[13] Python as of
-      version 3.0,[14] Ruby,[15] Tcl as of version 9,[16] and it is intended
-      to be supported by ECMAScript 6[17] (the prefix 0 has been discouraged
-      in ECMAScript 3 and dropped in ECMAScript 5[18])."
+      "Newer languages have been abandoning the prefix 0, as decimal numbers are often represented with leading zeroes.
+      The prefix q was introduced to avoid the prefix o being mistaken for a zero, while the prefix 0o was introduced to
+      avoid starting a numerical literal with an alphabetic character (like o or q), since these might cause the literal
+      to be confused with a variable name. The prefix 0o also follows the model set by the prefix 0x used for
+      hexadecimal literals in the C language; it is supported by Haskell,[19] OCaml,[20] Python as of version 3.0,[21]
+      Raku,[22] Ruby,[23] Tcl as of version 9,[24] PHP as of version 8.1,[25] Rust[26] and ECMAScript as of ECMAScript
+      6[27] (the prefix 0 originally stood for base 8 in JavaScript but could cause confusion,[28] therefore it has been
+      discouraged in ECMAScript 3 and dropped in ECMAScript 5[29])."
     </i>
   </p>
 
@@ -203,7 +201,8 @@
   </p>
   <p>
     Additionally, this proposal deprecates the existing error-prone syntax rule for non-zero integer literals starting
-    with a zero, following the example of C (<a href="https://www.open-std.org/jtc1/sc22/wg14/www/docs/n3353.htm">N3353</a>).
+    with a zero, following the example of C (<a
+      href="https://www.open-std.org/jtc1/sc22/wg14/www/docs/n3353.htm">N3353</a>).
     This would affect existing, traditional octal-literals (i.e. with a leading <tt>0</tt>), for instance when defining
     POSIX file permissions (sometimes padded with multiple leading zeros), as seen in popular
     repositories (&gt;500 stars) e.g., <a
