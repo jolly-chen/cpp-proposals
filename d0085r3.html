@@ -72,6 +72,7 @@
   <ul>
     <li><i>Really</i> fix the encoding of ’</li>
     <li>Update Wikipedia quote</li>
+    <li>Fix octal value of <tt>none</tt> in Table 149 specification</li>
   </ul>
   <h3>Since <a href="https://wg21.link/p0085r1">P0085R1</a></h3>
   <ul>
@@ -274,7 +275,7 @@
   <p>Table 149 — Enum class perms [tab:fs.enum.perms]
   <table border="1">
     <tr><th>Name</th><th>Value (octal)</th><th>POSIX macro</th><th>Definition or notes</th></tr>
-    <tr><td><tt>none</tt></td><td><tt>0<ins>o</ins></tt></td><td></td><td>There are no permissions set for the file.</td></tr>
+    <tr><td><tt>none</tt></td><td><tt>0<ins>o</ins>0</tt></td><td></td><td>There are no permissions set for the file.</td></tr>
     <tr><td><tt>owner_read</tt></td><td><tt>0<ins>o</ins>400</tt></td><td><tt>S_IRUSR</tt></td><td>Read permission, owner</td></tr>
     <tr><td><tt>owner_write</tt></td><td><tt>0<ins>o</ins>200</tt></td><td><tt>S_IWUSR</tt></td><td>Write permission, owner</td></tr>
     <tr><td><tt>owner_exec</tt></td><td><tt>0<ins>o</ins>100</tt></td><td><tt>S_IXUSR</tt></td><td>Execute/search permission, owner</td></tr>
