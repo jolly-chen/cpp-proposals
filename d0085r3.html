@@ -267,12 +267,12 @@
       <tt>0b1100</tt>. The
       integer-literals 1048576, 1'048'576,
       0X100000, 0x10'0000, and <del>0'004'000'000</del> <ins>0o0'004'000'000,</ins> all have
-      the same value. — end example]
+      the same value. - end example]
     </i>
   </p>
   <h3><a name="31.12.8.4">31.12.8.4 Enum class <tt>perm</tt> [fs.enum.perms]</a></h3>
   <!-- beautify ignore:start -->
-  <p>Table 149 — Enum class perms [tab:fs.enum.perms]
+  <p>Table 149 - Enum class perms [tab:fs.enum.perms]
   <table border="1">
     <tr><th>Name</th><th>Value (octal)</th><th>POSIX macro</th><th>Definition or notes</th></tr>
     <tr><td><tt>none</tt></td><td><tt>0<ins>o</ins>0</tt></td><td></td><td>There are no permissions set for the file.</td></tr>
@@ -351,7 +351,9 @@
     string s1 = format("{0:b} {0:d} {0:o} {0:x}", 42); // <i>value of</i> s1 <i>is</i> "101010 42 52 2a"
     string s2 = format("{0:#x} {0:#X}", 42);           // <i>value of</i> s2 <i>is</i> "0x2a 0X2A"
     string s3 = format("{:L}", 1234);                  // <i>value of</i> s3 <i>can be</i> "1,234"
-                                                       // <i>(depending on the locale)</i></pre><i>— end example]</i>
+                                                       // <i>(depending on the locale)</i>
+  </pre>
+  <i> - end example]</i>
   </p>
 
   <p> The example shows that <tt>std::format</tt> returns a consistent base prefix for the alternate form <tt>#</tt>
