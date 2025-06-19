@@ -70,7 +70,7 @@
   <h2>Revision History</h2>
   <h3>Since <a href="https://wg21.link/p0085r3">P0085R2</a></h3>
   <ul>
-    <li><i>Really</i> fix the encoding of ’</li>
+    <li><i>Really</i> fix the encoding of '</li>
     <li>Update Wikipedia quote</li>
     <li>Fix octal value of <tt>none</tt> in Table 149 specification</li>
     <li>Do not look at <tt>std::format</tt> in this paper</li>
@@ -81,7 +81,7 @@
     <li>Fix mismatch in technical specification of integer literals and lexical conventions</li>
     <li>Extend examples with common traps where octal-literals are assumed to be decimals by the programmer</li>
     <li>Extend effects on existing code</li>
-    <li>Fix encoding of ’</li>
+    <li>Fix encoding of '</li>
   </ul>
   <h3>Since <a href="https://wg21.link/p0085r0">P0085R0</a></h3>
   <ul>
@@ -145,9 +145,9 @@
   </p>
 
   <p>
-    It was observed that changes are needed in the speciifcation of
+    It was observed that changes are needed in the specification of
     <tt>std::format</tt> and streams to support the new octal-literal prefix for input/output.
-    This proposal does not address these open questions and leaves them to a future proposal.
+    This proposal does not address that and leaves them to a future proposal.
   </p>
 
 
@@ -234,6 +234,9 @@
   </p>
 
   <h2><a name="6.0">Technical Specification</a></h2>
+  <p>
+    We propose the feature test macro name <tt>__cpp_0o_octals</tt> for this feature.
+  </p>
 
   <p>
     To match <a href="https://www.open-std.org/jtc1/sc22/wg14/www/docs/n3353.htm">N3353</a>,
@@ -341,10 +344,9 @@
   <h4><ins>D??. Deprecated unprefixed octal literal [depr.oct]</ins></h4>
   </p>
 
-  <p><ins>1 An octal literal ([lex.icon], [gram.lex]) of the form</ins>
+  <p><ins>1 An <i>unprefixed-octal-literal</i> ([lex.icon], [gram.lex]) of the form</ins>
   <pre>
-    <ins><i>unprefixed-octal-literal</i></ins>
-      <ins>0 '<sub>opt</sub> octal-digit-sequence</ins>
+    <ins>0 '<sub>opt</sub> octal-digit-sequence</ins>
   </pre> 
   <ins>is deprecated. </ins></p>
 
