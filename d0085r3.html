@@ -74,6 +74,7 @@
     <li>Update Wikipedia quote</li>
     <li>Fix octal value of <tt>none</tt> in Table 149 specification</li>
     <li>Do not look at <tt>std::format</tt> in this paper</li>
+    <li>Change wording of deprecation</li>
   </ul>
   <h3>Since <a href="https://wg21.link/p0085r1">P0085R1</a></h3>
   <ul>
@@ -339,10 +340,12 @@
   <p>
   <h4><ins>D??. Deprecated unprefixed octal literal [depr.oct]</ins></h4>
   </p>
-  <p><ins>1 A non-zero octal literal ([lex.icon], [gram.lex]) of the form</ins>
+  <p><ins>1 An octal literal ([lex.icon], [gram.lex]) of the form</ins>
   <pre>
-    <ins><i>unprefixed-octal-literal</i></ins></pre>
-  <ins>is deprecated.</ins></p>
+    <ins><i>unprefixed-octal-literal</i></ins>
+      <ins>0 ’<sub>opt</sub> octal-digit-sequence</ins>
+  </pre> 
+  <ins>is deprecated. </ins></p>
 
   <a name="Acknowledgements"></a>
   <h2>Acknowledgements</h2>
