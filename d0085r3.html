@@ -73,6 +73,8 @@
     <li><i>Really</i> fix the encoding of ’</li>
     <li>Update Wikipedia quote</li>
     <li>Fix octal value of <tt>none</tt> in Table 149 specification</li>
+    <li>Do not look at <tt>std::format</tt> in this paper</li>
+    <li>Change wording of deprecation</li>
   </ul>
   <h3>Since <a href="https://wg21.link/p0085r1">P0085R1</a></h3>
   <ul>
@@ -140,6 +142,12 @@
     This proposal now reflects a recent corresponding change in C
     (<a href="https://www.open-std.org/jtc1/sc22/wg14/www/docs/n3353.htm">N3353</a>)
     that was triggered by an earlier version of this proposal.
+  </p>
+
+  <p>
+    It was observed that changes are needed in the speciifcation of
+    <tt>std::format</tt> and streams to support the new octal-literal prefix for input/output.
+    This proposal does not address these open questions and leaves them to a future proposal.
   </p>
 
 
@@ -332,78 +340,13 @@
   <p>
   <h4><ins>D??. Deprecated unprefixed octal literal [depr.oct]</ins></h4>
   </p>
-  <p><ins>1 A non-zero octal literal ([lex.icon], [gram.lex]) of the form</ins>
+
+  <p><ins>1 An octal literal ([lex.icon], [gram.lex]) of the form</ins>
   <pre>
-    <ins><i>unprefixed-octal-literal</i></ins></pre>
-  <ins>is deprecated.</ins></p>
-
-  <a name="Open Question"></a>
-  <h2>Open Question: <tt>std::format</tt></h2>
-  <p>In 28.5.2.2 Standard format specifiers [format.string.std], we have the following example:</p>
-  <p><i>
-      21 The available integer presentation types for integral types other than <tt>bool</tt> and <tt>charT</tt> are
-      specified in
-      Table 102.
-      [Example 4 :
-    </i>
-  <pre>
-    string s0 = format("{}", 42);                      // <i>value of</i> s0 <i>is</i> "42"
-    string s1 = format("{0:b} {0:d} {0:o} {0:x}", 42); // <i>value of</i> s1 <i>is</i> "101010 42 52 2a"
-    string s2 = format("{0:#x} {0:#X}", 42);           // <i>value of</i> s2 <i>is</i> "0x2a 0X2A"
-    string s3 = format("{:L}", 1234);                  // <i>value of</i> s3 <i>can be</i> "1,234"
-                                                       // <i>(depending on the locale)</i>
-  </pre>
-  <i> - end example]</i>
-  </p>
-
-  <p> The example shows that <tt>std::format</tt> returns a consistent base prefix for the alternate form <tt>#</tt>
-    option with a
-    hexadecimal type -- <tt>0x</tt> for <tt>#x</tt> and <tt>0X</tt> for <tt>#X</tt>.
-    However, the same is not true for the <tt>#</tt> option with an octal type, where we would have:
-  </p>
-
-  <pre>
-    std::string s1 = std::format("{:#o}", 042);  // <i>value of</i> s1 <i>is</i> "042"
-    std::string s2 = std::format("{:#o}", 0o42); // <i>value of</i> s2 <i>is</i> "042"
-    // The option #O does not exist
-  </pre>
-
-  <p>
-    To follow the deprecation of the non-zero <i>unprefixed-octal-literal</i>, we would prefer a behavior change in the
-    output
-    of <tt>std::format</tt> with <tt>#o</tt> to use the prefix <tt>0o</tt>. By using the search term
-    "<tt>std::format #o language:C++</tt>" on GitHub, we found that the format specifier <tt>#o</tt> was used in only
-    23 files and out of those, 13 are educational examples and 5 are test suites. This could indicate that a behavior
-    change will have minimal impact on existing code. Given the improved clarity of the new prefix (with potential
-    security implications), we recommend this backward-incompatible change.
-  </p>
-  <p>
-    <a href="https://www.open-std.org/jtc1/sc22/wg14/www/docs/n3353.htm">N3353</a> calls out this problem, but does not
-    attempt to solve it.
-    As backward-compatible alternatives, we propose several options:
-  </p>
-
-  <h3>Option 1</h3>
-  <p><i>Add the <tt>#O</tt> option, to return <tt>0o</tt></i></p>
-  <li>Con: inconsistent with the convention that e.g., <tt>#X</tt> returns upper-case <tt>0X</tt></li>
-  <li>Con: can be confused with the option <tt>#0</tt></li>
-
-  <h3>Option 2</h3>
-  <p><i>Add the <tt>#O</tt> option, to return <tt>0O</tt></i></p>
-  <li>Pro: consistent with the convention that e.g., <tt>#X</tt> returns upper-case <tt>0X</tt></li>
-  <li>Con: <tt>0O</tt> is less readable than <tt>0o</tt>, so we do not want to encourage its use because <tt>0O</tt> can
-    be confused with the letter O</li>
-  </li>
-
-  <h3>Option 3</h3>
-  <p><i>Add the <tt>##o</tt> and <tt>##O</tt> options, to return <tt>0o</tt> and <tt>0O</tt> respectively</i></p>
-  <li>Rationale: <tt>#o</tt> asks for a single character prefix and <tt>##o</tt> asks for a 2 character prefix</li>
-  <li>Pro: can format for both <tt>0o</tt> and <tt>0O</tt></li>
-  <li>Con: maybe a bit obscure</li>
-
-  <h3>Option 4</h3>
-  <p><i>Do Nothing</i></p>
-  <li>Con: <tt>std::format</tt> only outputs the deprecated octal-literal</li>
+    <ins><i>unprefixed-octal-literal</i></ins>
+      <ins>0 '<sub>opt</sub> octal-digit-sequence</ins>
+  </pre> 
+  <ins>is deprecated. </ins></p>
 
   <a name="Acknowledgements"></a>
   <h2>Acknowledgements</h2>
