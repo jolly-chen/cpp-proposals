@@ -74,6 +74,7 @@
     <li>Update Wikipedia quote</li>
     <li>Fix octal value of <tt>none</tt> in Table 149 specification</li>
     <li>Do not look at <tt>std::format</tt> in this paper</li>
+    <li>Change wording of deprecation</li>
   </ul>
   <h3>Since <a href="https://wg21.link/p0085r1">P0085R1</a></h3>
   <ul>
@@ -245,13 +246,13 @@
   <pre>
     <i>octal-literal
       <del>0</del>
-      <del>octal-literal ’<sub>opt</sub> octal-digit</del>
+      <del>octal-literal '<sub>opt</sub> octal-digit</del>
       <ins>prefixed-octal-literal</ins>
       <ins>unprefixed-octal-literal</ins>
     </i>
     <i><ins>unprefixed-octal-literal:</ins>
       <ins>0</ins>
-      <ins>0 ’<sub>opt</sub> octal-digit-sequence</ins>
+      <ins>0 '<sub>opt</sub> octal-digit-sequence</ins>
     </i>
     <i><ins>prefixed-octal-literal:</ins>
       <ins>octal-prefix octal-digit-sequence</ins></i>
@@ -266,20 +267,20 @@
   <pre>
     <i><ins>octal-digit-sequence:</ins>
       <ins>octal-digit</ins>
-      <ins>octal-digit-sequence ’<sub>opt</sub> octal-digit</ins></i>
+      <ins>octal-digit-sequence '<sub>opt</sub> octal-digit</ins></i>
   </pre>
   <p>
     <i>
       2 [Example 1 : The number twelve can be written <tt>12, <del>014</del>, <ins>0o14,</ins> 0XC</tt>, or
       <tt>0b1100</tt>. The
-      integer-literals 1048576, 1’048’576,
-      0X100000, 0x10’0000, and <del>0’004’000’000</del> <ins>0o0’004’000’000,</ins> all have
-      the same value. — end example]
+      integer-literals 1048576, 1'048'576,
+      0X100000, 0x10'0000, and <del>0'004'000'000</del> <ins>0o0'004'000'000,</ins> all have
+      the same value. - end example]
     </i>
   </p>
   <h3><a name="31.12.8.4">31.12.8.4 Enum class <tt>perm</tt> [fs.enum.perms]</a></h3>
   <!-- beautify ignore:start -->
-  <p>Table 149 — Enum class perms [tab:fs.enum.perms]
+  <p>Table 149 - Enum class perms [tab:fs.enum.perms]
   <table border="1">
     <tr><th>Name</th><th>Value (octal)</th><th>POSIX macro</th><th>Definition or notes</th></tr>
     <tr><td><tt>none</tt></td><td><tt>0<ins>o</ins>0</tt></td><td></td><td>There are no permissions set for the file.</td></tr>
@@ -308,13 +309,13 @@
   <pre>
     <i>octal-literal
       <del>0</del>
-      <del>octal-literal ’<sub>opt</sub> octal-digit</del>
+      <del>octal-literal '<sub>opt</sub> octal-digit</del>
       <ins>prefixed-octal-literal</ins>
       <ins>unprefixed-octal-literal</ins>
     </i>
     <i><ins>unprefixed-octal-literal:</ins>
       <ins>0</ins>
-      <ins>0 ’<sub>opt</sub> octal-digit-sequence</ins>
+      <ins>0 '<sub>opt</sub> octal-digit-sequence</ins>
     </i>
     <i><ins>prefixed-octal-literal:</ins>
       <ins>octal-prefix octal-digit-sequence</ins></i>
@@ -330,7 +331,7 @@
   <pre>
     <i><ins>octal-digit-sequence:</ins>
       <ins>octal-digit</ins>
-      <ins>octal-digit-sequence ’<sub>opt</sub> octal-digit</ins></i>
+      <ins>octal-digit-sequence '<sub>opt</sub> octal-digit</ins></i>
   </pre>
 
   <h3><a name="D">Annex D (normative) Compatibility features [depr]</a></h3>
@@ -339,10 +340,13 @@
   <p>
   <h4><ins>D??. Deprecated unprefixed octal literal [depr.oct]</ins></h4>
   </p>
-  <p><ins>1 A non-zero octal literal ([lex.icon], [gram.lex]) of the form</ins>
+
+  <p><ins>1 An octal literal ([lex.icon], [gram.lex]) of the form</ins>
   <pre>
-    <ins><i>unprefixed-octal-literal</i></ins></pre>
-  <ins>is deprecated.</ins></p>
+    <ins><i>unprefixed-octal-literal</i></ins>
+      <ins>0 '<sub>opt</sub> octal-digit-sequence</ins>
+  </pre> 
+  <ins>is deprecated. </ins></p>
 
   <a name="Acknowledgements"></a>
   <h2>Acknowledgements</h2>
