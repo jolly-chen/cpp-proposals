@@ -73,6 +73,7 @@
     <li>Add new section to highlight non-impact on standard library</li>
     <li>Add SG22 poll outcomes</li>
     <li>Rebase Technical Specification onto <a href="https://wg21.link/N5054">N5054</a></li>
+    <li>Minor wording improvements</li>
   </ul>
   <h3>Since <a href="https://wg21.link/p0085r2">P0085R2</a></h3>
   <ul>
@@ -279,75 +280,67 @@
 
   <h2><a name="6.0">Technical Specification</a></h2>
   <p>
-    We propose the feature test macro name <tt>__cpp_0o_octals</tt> for this feature.
-  </p>
-
-  <p>
     To match <a href="https://www.open-std.org/jtc1/sc22/wg14/www/docs/n3353.htm">N3353</a>,
-    make the following edits (relative to
-    <a href="https://wg21.link/N5054">N5054</a>),
+    make the following edits (relative to <a href="https://wg21.link/N5054">N5054</a>),
     highlighting the <ins>insertions</ins> and <del>removals</del>:
   </p>
 
+  <h3><a name="15.12">15.12 Predefined macro names [cpp.predefined]</a></h3>
+  <p>Add the following macro to Table 22 -- Feature-Test Macros [tab:cpp.predefined.ft]:</p>
+  <pre>
+    <ins>__cpp_0o_octals 2026XXL</ins>
+  </pre>
+
   <h3><a name="5.13.2">5.13.2 Integer literals [lex.icon]</a></h3>
   <pre>
-    <i>octal-literal
+    <i>octal-literal:</i>
       <del>0</del>
-      <del>octal-literal '<sub>opt</sub> octal-digit</del>
-      <ins>prefixed-octal-literal</ins>
-      <ins>unprefixed-octal-literal</ins>
-    </i>
-    <i><ins>unprefixed-octal-literal:</ins>
+      <i><del>octal-literal '<sub>opt</sub> octal-digit</del></i>
+      <i><ins>prefixed-octal-literal</ins></i>
+      <i><ins>unprefixed-octal-literal</ins></i>
+    <i><ins>unprefixed-octal-literal:</ins></i>
       <ins>0</ins>
-      <ins>0 '<sub>opt</sub> octal-digit-sequence</ins>
-    </i>
-    <i><ins>prefixed-octal-literal:</ins>
-      <ins>octal-prefix octal-digit-sequence</ins></i>
+      <ins>0 <i>'<sub>opt</sub> octal-digit-sequence</ins></i>
+    <i><ins>prefixed-octal-literal:</ins></i>
+      <i><ins>octal-prefix octal-digit-sequence</ins></i>
   </pre>
 
   <p>Before <i>hexadecimal-prefix</i> insert</p>
   <pre>
-    <i><ins>octal-prefix: one of</ins>
-      <ins>0o 0O</ins></i></pre>
+    <i><ins>octal-prefix: one of</ins></i>
+      <ins>0o 0O</ins>
+  </pre>
 
   <p>Before <i>hexadecimal-digit-sequence</i> insert</p>
   <pre>
-    <i><ins>octal-digit-sequence:</ins>
-      <ins>octal-digit</ins>
-      <ins>octal-digit-sequence '<sub>opt</sub> octal-digit</ins></i>
+    <i><ins>octal-digit-sequence:</ins></i>
+      <i><ins>octal-digit</ins></i>
+      <i><ins>octal-digit-sequence '<sub>opt</sub> octal-digit</ins></i>
   </pre>
 
   <p>
     Under paragraph 2, replace the text:
     <p style="margin-left: 40px;">
-      <i>
-        2 The hexadecimal-digits <tt>a</tt> through <tt>f</tt> and <tt>A</tt> through <tt>F</tt> have decimal values
-        ten through fifteen.
-      </i>
+      2 The <i>hexadecimal-digits</i> <tt>a</tt> through <tt>f</tt> and <tt>A</tt> through <tt>F</tt> have decimal values
+      ten through fifteen.
     </p>
     <p style="margin-left: 40px;">
-      <i>
-        [Example 1 : The number twelve can be written <tt>12, <del>014</del>, <ins>0o14,</ins>
-          0XC</tt>, or <tt>0b1100</tt>. The integer-literals 1048576, 1'048'576,
-        0X100000, 0x10'0000, and <del>0'004'000'000</del> <ins>0o0'004'000'000,</ins> all have
-        the same value. - end example]
-      </i>
+      [<i>Example 1</i>: The number twelve can be written <tt>12, <del>014</del>, <ins>0o14,</ins>
+      0XC</tt>, or <tt>0b1100</tt>. The <i>integer-literals</i> 1048576, 1'048'576,
+      0X100000, 0x10'0000, and <del>0'004'000'000</del> <ins>0o0'004'000'000,</ins> all have
+      the same value. -- <i>end example</i>]
     </p>
   </p>
 
   <p>After paragraph 4, add the paragraph:
-  <p style="margin-left: 40px;">
-    <ins> <i> An unprefixed-octal-literal ([lex.icon], [gram.lex]) of the form </ins>
-  </p>
-  <pre>
-        <ins>0 '<sub>opt</sub> octal-digit-sequence</ins> </pre>
-  <p style="margin-left: 40px;"><ins>is deprecated. [depr.oct]</ins></p>
-  </i>
+    <p style="margin-left: 40px;">
+      <ins>An <i>unprefixed-octal-literal</i> that is not <tt>0</tt> is deprecated ([depr.oct]).</ins>
+    </p>
   </p>
 
   <h3><a name="31.12.8.4">31.12.8.4 Enum class <tt>perm</tt> [fs.enum.perms]</a></h3>
   <!-- beautify ignore:start -->
-  <p>Table 151 - Enum class perms [tab:fs.enum.perms]
+  <p>Table 151 -- Enum class perms [tab:fs.enum.perms]</p>
   <table border="1">
     <tr><th>Name</th><th>Value <del>(octal)</del></th><th>POSIX macro</th><th>Definition or notes</th></tr>
     <tr><td><tt>none</tt></td><td><tt>0<ins>o</ins>0</tt></td><td></td><td>There are no permissions set for the file.</td></tr>
@@ -373,39 +366,31 @@
   <!-- beautify ignore:end -->
 
   <h3><a name="D">Annex D (normative) Compatibility features [depr]</a></h3>
-  <p>Add a new section</p>
+  <p>Add a new section immediately after [depr.lit]:</p>
 
-  <p>
   <h4><ins>D??. Deprecated unprefixed octal literal [depr.oct]</ins></h4>
-  </p>
-
-  <p><ins>1 An <i>unprefixed-octal-literal</i> ([lex.icon], [gram.lex]) of the form</ins>
-  <pre>
-    <ins>0 '<sub>opt</sub> octal-digit-sequence</ins> </pre>
-  <ins>is deprecated. </ins>
-  <p><ins><i>
-        [Note 1: Use of unprefixed octal literals, except the literal <tt>0</tt>, are deprecated because they are
-        often confused with decimals. --end note]
-      </i></ins></p>
-  <p><ins><i>
-        [Example 1:
-      </i></ins></p>
-  <pre>
+  <p><ins>1 An <i>unprefixed-octal-literal</i> ([lex.icon]) of the form</ins>
+    <pre>
+      <ins>0 '<sub>opt</sub> octal-digit-sequence</ins> </pre>
+    <ins>is deprecated. </ins>
+    <p><ins>
+      [<i>Note 1</i>: Use of an <i>unprefixed-octal-literal</i>, except the literal <tt>0</tt>, is deprecated because
+      they are often confused with decimals. --<i>end note</i>]
+    </ins></p>
+    <p><ins><i>[Example 1:</i></ins></p>
+    <pre>
       <ins>int zero = 0;                     // OK</ins>
       <ins>int more_zeroes = 000;            // deprecated</ins>
       <ins>int unprefixed_octal = 042;       // deprecated</ins>
       <ins>int prefixed_octal = 0o42;        // OK</ins>
     </pre>
-  <p><ins><i>
-        --end example]
-      </i></ins></p>
+    <p><ins><i>--end example]</i></ins></p>
   </p>
-  <!-- Add note why it's deprecated?. Example of old vs. new -->
 
   <a name="Acknowledgements"></a>
   <h2>Acknowledgements</h2>
   <p>
-    Thanks to Erich Keane and Thomas K&ouml;ppe for reviewing the draft.
+    Thanks to Erich Keane, Thomas K&ouml;ppe, and Jens Maurer for reviewing the draft.
     The document style was borrowed from Doc. no. <a
       href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4340.html">N4340</a>
   </p>
